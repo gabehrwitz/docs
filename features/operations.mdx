@@ -14,8 +14,8 @@ Operations are applied in sequence, creating a transformation pipeline:
 ```mermaid
 graph LR
     A[Raw Data] --> B[Op 1: Filter]
-    B --> C[Op 2: Dedupe]
-    C --> D[Op 3: Sort]
+    B --> C[Op 2: Transform]
+    C --> D[Op 3: Validate]
     D --> E[Transformed Data]
 ```
 
@@ -23,11 +23,31 @@ graph LR
 Click any operation in the pipeline to edit it. Drag to reorder. Changes are applied instantly.
 </Tip>
 
-## Available Operations
+## AI Operations
 
-### Filter
+### Use AI
 
-Remove rows that don't match specified conditions.
+Generate AI-powered content based on other column data. Perfect for enrichment, classification, and content generation.
+
+```
+Input: product description
+Output: AI-generated category, summary, or tags
+```
+
+### Detect Headers
+
+Use AI to detect column headers in messy data and rename columns automatically.
+
+```
+Before: _UNNAMED_0, _UNNAMED_1
+After: product_name, price
+```
+
+## Transform Operations
+
+### Filter Rows
+
+Keep or exclude rows based on a condition expression.
 
 <Tabs>
   <Tab title="Simple">
@@ -54,32 +74,16 @@ Remove rows that don't match specified conditions.
 - Date: equals, before, after, between, is empty
 - Boolean: is true, is false
 
-### Sort
+### Select Columns
 
-Order rows by one or more columns.
+Keep only specified columns, discarding the rest.
 
 ```
-Primary: created_at (Descending)
-Secondary: name (Ascending)
+Before: name, age, email, phone, address
+After: name, email
 ```
 
-- Sort by multiple columns for tie-breaking
-- Choose ascending or descending for each column
-- Null values are sorted to the end by default
-
-### Deduplicate
-
-Remove duplicate rows based on key columns.
-
-**Options:**
-- **Key columns** - Which columns to check for duplicates
-- **Keep** - First occurrence, last occurrence, or remove all duplicates
-
-<Warning>
-Deduplication order depends on the current sort. Apply a sort operation first if you need to control which duplicate is kept.
-</Warning>
-
-### Rename Column
+### Rename Columns
 
 Change column names for clarity or consistency.
 
@@ -91,84 +95,83 @@ Change column names for clarity or consistency.
 - Bulk rename multiple columns at once
 - Formulas automatically update to use new names
 
-### Add Column
+### Drop Column
 
-Add a new column to your dataset.
-
-**Column types:**
-- **Empty column** - Add a column with null values
-- **Constant value** - Fill with a static value
-- **Formula** - Compute values from other columns
-
-```
-New column: "full_name"
-Formula: first_name + " " + last_name
-```
-
-### Remove Column
-
-Delete columns you don't need.
+Remove columns you don't need.
 
 - Remove single or multiple columns
 - Removing a column used in formulas will show a warning
 
-### Change Type
+### Copy Column
 
-Convert a column to a different data type.
-
-| From | To | Example |
-|------|----|---------|
-| text | number | "42" → 42 |
-| text | date | "2024-01-15" → Date |
-| number | text | 42 → "42" |
-| text | boolean | "true" → true |
-
-<Info>
-Values that can't be converted become `null`. Review the preview before confirming.
-</Info>
-
-### Fill Empty
-
-Replace null or empty values in a column.
-
-**Fill options:**
-- **Constant** - Replace with a static value
-- **Previous value** - Fill with the value from the row above
-- **Next value** - Fill with the value from the row below
-
-### Split Column
-
-Split a text column into multiple columns based on a delimiter.
+Create a copy of a column with a new name.
 
 ```
-"John,Doe,john@example.com"
-→ ["John", "Doe", "john@example.com"]
+Before: email
+After: email, email_backup
 ```
 
-**Options:**
-- Delimiter (comma, tab, pipe, custom)
-- Maximum splits
-- New column names
+### Add Literal Column
 
-### Merge Columns
-
-Combine multiple columns into one.
+Add a new column with a constant value.
 
 ```
-first_name + " " + last_name → "John Doe"
+New column: "status"
+Value: "active"
 ```
 
-- Choose a separator (space, comma, none)
-- Include or exclude null values
+### Formula
 
-### Find & Replace
+Compute values using Excel-like formulas with column references.
 
-Replace values in a column.
+```
+New column: "full_name"
+Formula: {{first_name}} + " " + {{last_name}}
+```
 
-**Modes:**
-- **Exact match** - Replace exact values only
-- **Contains** - Replace partial matches
-- **Regex** - Use regular expressions for complex patterns
+See [Formulas](/features/formulas) for the complete function reference.
+
+## Text Operations
+
+### Trim Whitespace
+
+Remove leading and trailing whitespace from text values.
+
+```
+Before: "  hello  "
+After: "hello"
+```
+
+### Collapse Whitespace
+
+Replace multiple consecutive spaces with a single space.
+
+```
+Before: "hello   world"
+After: "hello world"
+```
+
+### Normalize Case
+
+Convert text to lowercase, uppercase, or title case.
+
+```
+Before: "HELLO"
+After: "hello"
+```
+
+### Strip Prefix / Suffix
+
+Remove a specified prefix or suffix from text values.
+
+```
+Before: "PREFIX_value"
+After: "value"
+```
+
+### Replace Values
+
+Find and replace text patterns within values.
 
 ```
 Find: "NY"
@@ -176,21 +179,194 @@ Replace: "New York"
 Column: state
 ```
 
-### Trim Whitespace
+### Snake Case Names
 
-Remove leading and trailing whitespace from text columns.
+Convert all column names to snake_case format.
 
-- Apply to one or all text columns
-- Optionally normalize internal whitespace (multiple spaces → single space)
+```
+Before: "Product Name", "First Name"
+After: "product_name", "first_name"
+```
 
-## Bulk Operations
+## Parsing Operations
 
-Apply operations to multiple columns at once:
+### Parse Number
 
-1. Select columns using checkboxes
-2. Right-click or use the bulk actions menu
-3. Choose an operation
-4. Configure and apply
+Convert text to numeric values, handling various formats.
+
+```
+Before: "1,234.56"
+After: 1234.56
+```
+
+### Parse Boolean
+
+Convert text like 'yes', 'no', 'true', 'false' to boolean values.
+
+```
+Before: "yes"
+After: true
+```
+
+### Parse Timestamp
+
+Parse date/time strings into standardized timestamp format.
+
+```
+Before: "01/15/2024"
+After: "2024-01-15T00:00:00Z"
+```
+
+### Parse Money
+
+Extract numeric amounts from currency strings.
+
+```
+Before: "$1,234.56"
+After: 1234.56
+```
+
+### Parse Percentage
+
+Convert percentage strings to decimal values.
+
+```
+Before: "50%"
+After: 0.5
+```
+
+### Parse Quantity & Unit
+
+Split values like '5 mg' into separate quantity and unit columns.
+
+```
+Before: "5 mg"
+After: 5, "mg" (two columns)
+```
+
+## Null Handling
+
+### Empty to Null
+
+Convert empty strings to null values.
+
+```
+Before: ""
+After: null
+```
+
+### Null to Default
+
+Replace null values with a specified default value.
+
+```
+Before: null
+After: "(default)"
+```
+
+### Coalesce Fields
+
+Use the first non-null value from multiple columns.
+
+```
+Columns: nickname, first_name, "Unknown"
+Result: first non-null value
+```
+
+## Merge Operations
+
+### Union
+
+Combine rows from multiple tables into a single output.
+
+```
+Table A: 100 rows
+Table B: 50 rows
+Result: 150 rows (stacked)
+```
+
+### Join
+
+Merge two tables by matching rows on common keys.
+
+```
+Left table + Right table
+Join on: customer_id
+Result: Combined columns where keys match
+```
+
+**Join types:**
+- Left join (keep all left rows)
+- Inner join (only matching rows)
+- Full outer join (keep all rows)
+
+### Map Values
+
+Replace values using a lookup table (e.g., codes to names).
+
+```
+Lookup: "US" → "United States"
+Before: "US"
+After: "United States"
+```
+
+## Identity Operations
+
+### Generate Unique ID
+
+Create a unique identifier for each row (like a fingerprint for your data).
+
+```
+New column: rb_id
+Value: rb_abc123...
+```
+
+### Apply Corrections
+
+Apply manual data corrections and overrides from the corrections table.
+
+## Validation Operations
+
+### Require Fields
+
+Ensure specified fields are present and not null in every row.
+
+### Unique Constraint
+
+Verify that values in specified columns are unique across all rows.
+
+### Primary Key Constraint
+
+Enforce primary key uniqueness and non-null constraints.
+
+### Validate Schema
+
+Validate data types and structure against a defined schema.
+
+### Quarantine If
+
+Quarantine rows that fail a custom formula-based validation rule.
+
+```
+Rule: {{price}} > 0
+Result: Rows with zero or negative price are quarantined
+```
+
+<Info>
+Quarantined rows are moved to a separate table for review, not deleted.
+</Info>
+
+## Quality Flags
+
+Flag rows that match specific quality issues:
+
+| Operation | Flags rows where... |
+|-----------|---------------------|
+| Flag Negative | Numeric field contains negative values |
+| Flag Zero | Numeric field contains zero values |
+| Flag If Less Than | One column is less than another |
+| Flag Invalid Units | Units not in allowed list |
+| Flag Missing Units | Quantity has no associated unit |
 
 ## Operation History
 
@@ -205,7 +381,7 @@ Every operation is tracked in the history:
 
 <AccordionGroup>
   <Accordion title="Order matters" icon="list-ol">
-    Operations apply in sequence. Filter before deduplication to ensure you keep the right records.
+    Operations apply in sequence. Filter before validation to ensure you only validate relevant records.
   </Accordion>
   <Accordion title="Use descriptive names" icon="tag">
     Name your operations (e.g., "Remove inactive users") so teammates understand the pipeline.
@@ -213,7 +389,7 @@ Every operation is tracked in the history:
   <Accordion title="Preview before applying" icon="eye">
     Always check the preview to verify the operation does what you expect.
   </Accordion>
-  <Accordion title="Start broad, then narrow" icon="filter">
-    Apply general transformations first (type changes, renames), then specific filters.
+  <Accordion title="Use AI for complex tasks" icon="sparkles">
+    When pattern-based operations aren't enough, use AI operations to handle nuanced transformations.
   </Accordion>
 </AccordionGroup>

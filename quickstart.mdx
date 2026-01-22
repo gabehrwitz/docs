@@ -36,35 +36,15 @@ Projects help you organize related datasets together.
 
 ### Step 3: Import Your Data
 
-<Tabs>
-  <Tab title="CSV Upload">
-    1. Click **Upload** in your project
-    2. Drag and drop your CSV file or click to browse
-    3. Rowbase automatically detects column types and headers
-    4. Review the preview and click **Import**
-  </Tab>
-  <Tab title="Paste Data">
-    1. Click **Paste** in your project
-    2. Copy data from Excel, Google Sheets, or any spreadsheet
-    3. Paste directly into Rowbase
-    4. Review and confirm the import
-  </Tab>
-  <Tab title="API">
-    ```bash
-    curl -X POST https://api.rowbase.com/v1/datasets \
-      -H "Authorization: Bearer YOUR_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "name": "My Dataset",
-        "project_id": "proj_xxx",
-        "data": [
-          {"name": "Alice", "email": "alice@example.com"},
-          {"name": "Bob", "email": "bob@example.com"}
-        ]
-      }'
-    ```
-  </Tab>
-</Tabs>
+1. Click **Upload** in your project
+2. Drag and drop your file or click to browse
+3. Supported formats: CSV, Excel (.xlsx, .xls), JSON
+4. Rowbase automatically detects column types and headers
+5. Review the preview and click **Import**
+
+<Tip>
+You can upload multiple files at once. Each file becomes a separate dataset.
+</Tip>
 
 ### Step 4: Transform Your Data
 
@@ -74,14 +54,14 @@ Once your data is imported, you can apply operations to clean and transform it.
   <Card title="Filter Rows" icon="filter">
     Remove rows that don't match specific criteria
   </Card>
-  <Card title="Sort Data" icon="arrow-down-a-z">
-    Order your data by any column
+  <Card title="Add Columns" icon="plus">
+    Create computed columns with formulas
   </Card>
-  <Card title="Remove Duplicates" icon="clone">
-    Deduplicate rows based on key columns
+  <Card title="Rename & Normalize" icon="pen">
+    Standardize column names and values
   </Card>
-  <Card title="Add Formulas" icon="function">
-    Create computed columns with spreadsheet-like formulas
+  <Card title="AI Transformations" icon="wand-magic-sparkles">
+    Use AI to categorize, extract, and enrich data
   </Card>
 </CardGroup>
 
@@ -91,8 +71,8 @@ Once your data is imported, you can apply operations to clean and transform it.
   <Card title="Core Concepts" icon="book" href="/concepts">
     Learn about datasets, operations, and formulas
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/introduction">
-    Integrate Rowbase into your applications
+  <Card title="Operations" icon="gear" href="/features/operations">
+    Explore all available data transformations
   </Card>
 </CardGroup>
 

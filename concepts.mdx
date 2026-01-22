@@ -67,7 +67,7 @@ A **Dataset** is a structured collection of data, similar to a spreadsheet or da
 | `number` | Numeric values (integers and decimals) | 42, 3.14 |
 | `boolean` | True/false values | true, false |
 | `date` | Date and datetime values | 2024-01-15 |
-| `json` | Nested JSON objects | {"key": "value"} |
+| `json` | Nested JSON objects | `{"key": "value"}` |
 
 ## Operations
 
@@ -81,18 +81,18 @@ A **Dataset** is a structured collection of data, similar to a spreadsheet or da
     Filter: status = "active" AND created_at > "2024-01-01"
     ```
   </Accordion>
-  <Accordion title="Sort" icon="arrow-down-a-z">
-    Order rows by one or more columns.
+  <Accordion title="Parse & Transform" icon="wand-magic-sparkles">
+    Convert text to numbers, dates, booleans, and more.
 
     ```
-    Sort: created_at DESC, name ASC
+    Parse: "$1,234.56" → 1234.56
     ```
   </Accordion>
-  <Accordion title="Deduplicate" icon="clone">
-    Remove duplicate rows based on key columns.
+  <Accordion title="Use AI" icon="sparkles">
+    Generate content, detect headers, and enrich data with AI.
 
     ```
-    Deduplicate on: email (keep: first)
+    Input: product description → Output: category
     ```
   </Accordion>
   <Accordion title="Rename Columns" icon="pen">
@@ -102,11 +102,11 @@ A **Dataset** is a structured collection of data, similar to a spreadsheet or da
     Rename: "col1" → "customer_name"
     ```
   </Accordion>
-  <Accordion title="Add Column" icon="plus">
-    Add new columns with default values or formulas.
+  <Accordion title="Join & Union" icon="git-merge">
+    Combine data from multiple tables.
   </Accordion>
-  <Accordion title="Remove Column" icon="minus">
-    Delete columns you don't need.
+  <Accordion title="Validate" icon="shield-check">
+    Ensure data quality with constraints and quarantine rules.
   </Accordion>
 </AccordionGroup>
 
@@ -117,8 +117,8 @@ Operations are applied in sequence, creating a transformation pipeline:
 ```mermaid
 graph LR
     A[Raw Data] --> B[Filter]
-    B --> C[Deduplicate]
-    C --> D[Sort]
+    B --> C[Parse]
+    C --> D[Validate]
     D --> E[Final Dataset]
 ```
 
@@ -186,7 +186,7 @@ UPPER(first_name) + " " + UPPER(last_name)
   <Card title="Formulas" icon="function" href="/features/formulas">
     Master formula syntax and functions
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+  <Card title="API Integration" icon="code" href="/integrations/api">
     Automate with the Rowbase API
   </Card>
 </CardGroup>
