@@ -1,0 +1,187 @@
+---
+title: "Data Quality"
+description: "Understand, correct, and validate your data"
+---
+
+## Overview
+
+Rowbase provides powerful tools to understand your data quality, make corrections, and ensure data meets your standards before use.
+
+<CardGroup cols="2">
+  <Card title="Diff View" icon="code-compare">
+    Compare source data to transformed output
+  </Card>
+  <Card title="Inline Editing" icon="pen-to-square">
+    Edit cells directly with automatic correction tracking
+  </Card>
+  <Card title="Data Profiling" icon="chart-bar">
+    Get instant statistics for every column
+  </Card>
+  <Card title="Quarantine" icon="box-archive">
+    Isolate problematic rows for review
+  </Card>
+</CardGroup>
+
+## Diff View
+
+Compare your source data to the transformed output to see exactly what changed.
+
+### Using Diff View
+
+1. Open a dataset with operations applied
+2. Click the **Diff** button
+3. View row-by-row changes
+
+### What Diff Shows
+
+| Status | Description |
+|--------|-------------|
+| **Added** | New rows created by operations |
+| **Removed** | Rows filtered out or quarantined |
+| **Modified** | Rows with changed values |
+| **Unchanged** | Rows that passed through unchanged |
+
+The diff highlights:
+- Which columns were affected
+- Before and after values for each change
+- Summary statistics (total added, removed, modified)
+
+<Tip>
+Use diff view after applying operations to verify the transformations did what you expected.
+</Tip>
+
+## Data Profiling
+
+Get instant statistics and distributions for every column.
+
+### Profile Information
+
+For each column, the profile shows:
+
+- **Type** - Detected data type (text, number, date, boolean)
+- **Unique values** - Count and percentage
+- **Null values** - Count and percentage
+- **Top values** - Most frequent values with counts
+
+**For numeric columns:**
+- Min, max, mean, median
+- Standard deviation
+- Histogram distribution
+
+**For text columns:**
+- Length statistics
+- Character pattern analysis
+- Common prefixes/suffixes
+
+### Viewing the Profile
+
+1. Open a dataset
+2. Click the **Profile** tab
+3. Explore statistics for each column
+
+## Inline Cell Editing & Corrections
+
+Edit any cell directly in the data grid. Your changes are tracked as corrections.
+
+### How Corrections Work
+
+Corrections are stored separately from your data and operations. They're applied last, after all operations run, so:
+
+- Original data is never modified
+- Corrections persist across new data versions
+- You can see and manage all corrections
+
+### Making a Correction
+
+1. Click on a cell
+2. Edit the value
+3. The correction is saved automatically
+
+### Viewing Corrections
+
+Corrected cells show a visual indicator. You can:
+
+- View all corrections in the **Corrections** panel
+- See who made each correction and when
+- Revert individual corrections
+
+<Info>
+Corrections are applied via the **Apply Corrections** operation in your pipeline. This operation is added automatically when you make your first correction.
+</Info>
+
+## Quarantine
+
+Isolate problematic rows for review without deleting them.
+
+### Automatic Quarantine
+
+Use the **Quarantine If** operation to automatically quarantine rows that fail validation:
+
+```
+Rule: {{price}} > 0
+Result: Rows with zero or negative price are quarantined
+```
+
+### Manual Quarantine
+
+You can also manually quarantine rows:
+
+1. Select rows in the data view
+2. Click **Quarantine**
+3. Add a reason (optional)
+
+### Working with Quarantined Rows
+
+Quarantined rows are:
+- Excluded from the main data view
+- Stored in a separate quarantine table
+- Available for review and restoration
+
+To restore a quarantined row:
+1. Open the **Quarantine** panel
+2. Review the row and reason
+3. Click **Restore** to bring it back
+
+<Warning>
+Quarantined rows are excluded from exports and API responses by default.
+</Warning>
+
+## Validation Operations
+
+Build validation rules into your pipeline:
+
+| Operation | Purpose |
+|-----------|---------|
+| **Require Fields** | Ensure columns are not null |
+| **Unique Constraint** | Ensure values are unique |
+| **Primary Key** | Combine uniqueness + not-null |
+| **Validate Schema** | Check types match expectations |
+| **Quarantine If** | Quarantine rows failing a formula |
+
+### Quality Flags
+
+Flag rows with potential issues without quarantining them:
+
+- **Flag Negative** - Negative numeric values
+- **Flag Zero** - Zero values
+- **Flag If Less Than** - Column A < Column B
+- **Flag Invalid Units** - Units not in allowed list
+
+Flags add a column indicating which rows have issues, so you can filter and review them.
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Profile before transforming" icon="chart-bar">
+    Run the profiler first to understand your data. This helps you choose the right operations.
+  </Accordion>
+  <Accordion title="Use quarantine over delete" icon="box-archive">
+    When in doubt, quarantine problematic rows instead of deleting. You can always restore them later.
+  </Accordion>
+  <Accordion title="Check the diff" icon="code-compare">
+    After applying operations, use diff view to verify the changes match your expectations.
+  </Accordion>
+  <Accordion title="Build validation into pipelines" icon="shield-check">
+    Add validation operations so future data imports are automatically checked against your rules.
+  </Accordion>
+</AccordionGroup>

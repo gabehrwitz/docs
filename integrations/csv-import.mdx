@@ -10,8 +10,12 @@ Rowbase supports importing data from:
 | Format | Extensions | Notes |
 |--------|------------|-------|
 | CSV | `.csv` | Comma-separated values |
-| TSV | `.tsv`, `.txt` | Tab-separated values |
-| Excel | `.xlsx`, `.xls` | All sheets or specific sheet |
+| Excel | `.xlsx`, `.xls` | Spreadsheet files |
+| JSON | `.json` | Array of objects |
+
+<Info>
+Maximum file size: 10MB per file.
+</Info>
 
 ## Importing CSV Files
 
@@ -79,39 +83,13 @@ If auto-detection isn't correct:
 For columns with mixed types (e.g., "N/A" mixed with numbers), choose the primary type. Invalid values become `null`.
 </Tip>
 
-## Handling Large Files
+## Tips for Large Files
 
-### File Size Limits
+If your file exceeds 10MB:
 
-- **Web upload**: 100MB
-- **API upload**: 500MB
-- **Chunked upload**: Unlimited
-
-### Tips for Large Files
-
-1. **Use the API** for files over 100MB
-2. **Remove unnecessary columns** before import
-3. **Split into multiple files** if data is logically separable
-4. **Use chunked upload** for very large files
-
-### Chunked Upload (API)
-
-```bash
-# Initialize upload
-curl -X POST https://api.rowbase.com/v1/uploads/init \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{"filename": "large-file.csv", "total_size": 500000000}'
-
-# Upload chunks
-curl -X POST https://api.rowbase.com/v1/uploads/UPLOAD_ID/chunk \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Range: bytes 0-9999999/500000000" \
-  --data-binary @chunk1.csv
-
-# Complete upload
-curl -X POST https://api.rowbase.com/v1/uploads/UPLOAD_ID/complete \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
+1. **Remove unnecessary columns** before import
+2. **Split into multiple files** if data is logically separable
+3. **Use Excel format** which is often more compact than CSV
 
 ## Excel Import
 
@@ -133,45 +111,13 @@ curl -X POST https://api.rowbase.com/v1/uploads/UPLOAD_ID/complete \
 Each sheet becomes a separate dataset when importing multiple sheets.
 </Info>
 
-## Updating Existing Datasets
+## Importing New Data
 
-### Append Mode
+Each file upload creates a new dataset. To update data:
 
-Add new rows to an existing dataset:
-
-1. Open the dataset
-2. Click **Import → Append**
-3. Upload your file
-4. Rowbase matches columns by name
-5. New rows are added at the end
-
-### Replace Mode
-
-Replace all data while keeping operations:
-
-1. Open the dataset
-2. Click **Import → Replace**
-3. Upload your file
-4. All existing rows are removed
-5. New data is imported
-6. Operations are re-applied
-
-### Upsert Mode
-
-Update existing rows and add new ones:
-
-1. Requires a **primary key** column
-2. Matching rows are updated
-3. Non-matching rows are added
-4. Rows not in the new file are unchanged
-
-```bash
-# Upsert via API
-curl -X POST https://api.rowbase.com/v1/datasets/ds_xxx/upsert \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: text/csv" \
-  --data-binary @updates.csv
-```
+1. Upload a new version of your file
+2. Re-apply your operations to the new dataset
+3. Operations can be copied between datasets
 
 ## Troubleshooting
 

@@ -1,0 +1,109 @@
+---
+title: "AI Assistant"
+description: "Use AI to transform, clean, and understand your data"
+---
+
+## Overview
+
+Rowbase includes a powerful AI assistant that helps you work with data through natural language. Chat with your data, get intelligent suggestions, and use AI-powered operations.
+
+## AI Chat
+
+Talk to your data using natural language. The AI assistant understands your datasets and can help you:
+
+- Explore and understand your data
+- Create transformations using plain English
+- Debug data quality issues
+- Get recommendations for cleaning and organizing
+
+### Starting a Conversation
+
+1. Open a dataset
+2. Click the **Chat** icon
+3. Ask a question or describe what you want to do
+
+### Example Prompts
+
+**Understanding data:**
+- "What columns does this dataset have?"
+- "Show me rows where status is empty"
+- "What's the distribution of values in the category column?"
+
+**Creating transformations:**
+- "Convert all email addresses to lowercase"
+- "Parse the date column from MM/DD/YYYY format"
+- "Create a new column that combines first and last name"
+
+**Data quality:**
+- "Find duplicate rows based on email"
+- "Which rows have invalid phone numbers?"
+- "Flag rows where quantity is negative"
+
+## AI-Suggested Operations
+
+When you import data, the AI analyzes it and suggests operations to clean and transform it.
+
+### How Suggestions Work
+
+1. **Import data** - Upload a CSV or paste data
+2. **Analysis** - AI analyzes the data structure and quality
+3. **Suggestions** - You'll see suggested operations at the top of the pipeline
+4. **Accept or dismiss** - Review each suggestion and accept or dismiss
+
+### Types of Suggestions
+
+- **Header detection** - Rename columns from detected headers
+- **Type parsing** - Convert text to numbers, dates, or booleans
+- **Normalization** - Standardize formats (snake_case, trim whitespace)
+- **Quality fixes** - Handle empty values, standardize case
+
+<Tip>
+You don't have to accept every suggestion. Review each one and accept only the ones that make sense for your use case.
+</Tip>
+
+## AI Operations
+
+Beyond chat and suggestions, Rowbase includes AI-powered operations you can add to your pipeline.
+
+### Use AI
+
+Generate content based on other columns using AI.
+
+**Use cases:**
+- Categorize products from descriptions
+- Extract entities from text
+- Generate summaries
+- Translate content
+- Enrich data with derived fields
+
+```
+Input: Product description
+Prompt: "Categorize this product into: Electronics, Clothing, Home, or Other"
+Output: AI-generated category
+```
+
+### Detect Headers
+
+When data has messy or missing headers, AI can detect the actual column names from the data.
+
+```
+Before: _UNNAMED_0, _UNNAMED_1, _UNNAMED_2
+After: customer_name, email, signup_date
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Be specific in prompts" icon="comment">
+    The more specific your request, the better the result. Instead of "fix the dates", try "parse dates from DD/MM/YYYY format to ISO format".
+  </Accordion>
+  <Accordion title="Review suggestions carefully" icon="eye">
+    AI suggestions are helpful but not always perfect. Always review the preview before accepting.
+  </Accordion>
+  <Accordion title="Use chat for exploration" icon="magnifying-glass">
+    Chat is great for understanding your data before deciding on transformations. Ask questions first, then build your pipeline.
+  </Accordion>
+  <Accordion title="Combine AI with manual operations" icon="wand-magic-sparkles">
+    AI is powerful for complex tasks, but sometimes a simple filter or rename is all you need. Use the right tool for the job.
+  </Accordion>
+</AccordionGroup>

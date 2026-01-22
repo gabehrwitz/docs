@@ -18,7 +18,8 @@
             "pages": [
               "index",
               "quickstart",
-              "concepts"
+              "concepts",
+              "best-practices"
             ]
           },
           {
@@ -27,62 +28,22 @@
               "features/datasets",
               "features/operations",
               "features/formulas",
+              "features/ai-assistant",
+              "features/data-quality",
               "features/sharing"
             ]
           },
           {
             "group": "Integrations",
             "pages": [
-              "integrations/csv-import",
-              "integrations/api",
-              "integrations/webhooks"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "api-reference/introduction",
-              "api-reference/authentication"
-            ]
-          },
-          {
-            "group": "Datasets",
-            "pages": [
-              "api-reference/datasets/list",
-              "api-reference/datasets/get",
-              "api-reference/datasets/create",
-              "api-reference/datasets/update",
-              "api-reference/datasets/delete"
-            ]
-          },
-          {
-            "group": "Operations",
-            "pages": [
-              "api-reference/operations/list",
-              "api-reference/operations/execute"
+              "integrations/csv-import"
             ]
           }
         ]
       }
     ],
     "global": {
-      "anchors": [
-        {
-          "anchor": "API Status",
-          "href": "https://status.rowbase.com",
-          "icon": "signal"
-        },
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/Rowbase-com",
-          "icon": "github"
-        }
-      ]
+      "anchors": []
     }
   },
   "logo": {
@@ -116,7 +77,6 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/Rowbase-com",
       "linkedin": "https://linkedin.com/company/rowbase"
     }
   }

@@ -1,0 +1,172 @@
+---
+title: "Best Practices"
+description: "Guidelines for getting the most out of Rowbase"
+---
+
+## Data Organization
+
+### Use Meaningful Names
+
+Give your projects and datasets clear, descriptive names that your team will understand.
+
+**Good examples:**
+- "Q1 2024 Marketing Leads"
+- "Customer Churn Analysis"
+- "Product Inventory - US Warehouse"
+
+**Avoid:**
+- "Data1"
+- "Test"
+- "Final_v2_FINAL"
+
+### Structure Your Projects
+
+Group related datasets into projects by:
+- **Team or department** - Marketing, Sales, Product
+- **Initiative** - Product launch, Annual review
+- **Data source** - CRM exports, Survey responses
+
+<Tip>
+Create a naming convention and document it. Consistency makes it easier for teammates to find what they need.
+</Tip>
+
+## Data Quality
+
+### Clean Data on Import
+
+Address data quality issues early:
+
+1. **Remove duplicates** - Deduplicate immediately after import using primary keys
+2. **Standardize formats** - Use operations to normalize dates, phone numbers, and addresses
+3. **Handle nulls** - Decide how to treat missing values before analysis
+
+### Set Primary Keys
+
+Always designate primary keys for datasets that will be updated:
+
+- Enables reliable deduplication
+- Supports upsert operations
+- Maintains record identity across updates
+
+<Warning>
+Without a primary key, appending data may create duplicates.
+</Warning>
+
+### Validate Your Data
+
+Before sharing or exporting:
+
+1. Check row counts match expectations
+2. Verify column types are correct
+3. Review a sample of transformed data
+4. Test filters return expected results
+
+## Operations Pipeline
+
+### Order Matters
+
+Apply operations in a logical sequence:
+
+```
+1. Filter (remove irrelevant rows first)
+2. Deduplicate (on filtered data)
+3. Transform (clean and standardize)
+4. Sort (organize for output)
+```
+
+<Info>
+Filtering before deduplication ensures you keep the right records when duplicates exist.
+</Info>
+
+### Keep Pipelines Simple
+
+- Each operation should do one thing well
+- Avoid overly complex filter conditions
+- Break large transformations into steps
+- Name operations descriptively
+
+### Document Your Work
+
+Add comments explaining:
+- Why an operation was applied
+- Business logic behind filters
+- Data source and freshness
+- Known limitations or caveats
+
+## Collaboration
+
+### Use Appropriate Access Levels
+
+| When to use | Access level |
+|-------------|--------------|
+| Working draft | Keep private |
+| Team review | Share with editors |
+| Stakeholder review | Share as view-only |
+| External sharing | Use share links carefully |
+
+### Communicate Changes
+
+When modifying shared datasets:
+- Notify teammates before major changes
+- Document what changed and why
+- Use comments for context
+
+### Review Before Sharing Externally
+
+Before creating public links:
+- Verify no sensitive data is exposed
+- Check that filters are applied correctly
+- Confirm the view shows what you intend
+
+## Performance
+
+### Optimize Large Datasets
+
+For datasets with 100K+ rows:
+
+- **Filter early** - Reduce row count before other operations
+- **Limit columns** - Remove unnecessary columns
+- **Use pagination** - Don't load everything at once
+- **Export in batches** - For very large exports
+
+### Import Efficiently
+
+- Use CSV for large files (faster than Excel)
+- Split very large files into chunks
+- Remove unnecessary columns before import
+
+## Version Control
+
+### Leverage Version History
+
+Rowbase automatically versions your data:
+
+- **Before major changes** - Note the current version
+- **After mistakes** - Rollback to a previous version
+- **For audits** - Export data from specific points in time
+
+### Create Checkpoints
+
+Before significant transformations:
+1. Export a backup
+2. Note the version number
+3. Document what you're about to change
+
+<Tip>
+Version history is your safety net. Don't be afraid to experiment knowing you can always go back.
+</Tip>
+
+## Security
+
+### Protect Sensitive Data
+
+- Never include passwords or API keys in datasets
+- Be cautious with PII (names, emails, addresses)
+- Use view-only sharing for sensitive reports
+- Audit who has access to sensitive projects
+
+### Manage Access Regularly
+
+- Remove access when team members leave
+- Review sharing settings quarterly
+- Use project-level permissions over dataset-level when possible

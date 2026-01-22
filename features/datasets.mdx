@@ -11,52 +11,19 @@ Datasets are the foundation of Rowbase. They store your structured data in a tab
 
 ### From File Upload
 
-The most common way to create a dataset is by uploading a file:
+Upload files by navigating to your project:
 
-1. Navigate to your project
-2. Click **Upload** or drag and drop a file
-3. Supported formats: CSV, TSV, Excel (.xlsx, .xls)
-4. Rowbase automatically detects:
+1. Click **Upload** or drag and drop files
+2. Supported formats: CSV, Excel (.xlsx, .xls), JSON
+3. Rowbase automatically detects:
    - Column headers
    - Data types
    - Date formats
    - Number formats
 
 <Tip>
-For large files (100MB+), consider using the API for more control over the import process.
+You can upload multiple files at once. Each file becomes a separate dataset.
 </Tip>
-
-### From Paste
-
-Quickly import data by copying from any spreadsheet:
-
-1. Click **Paste** in your project
-2. Copy cells from Excel, Google Sheets, or any spreadsheet application
-3. Paste into the Rowbase input
-4. Review the preview and confirm
-
-### Via API
-
-Create datasets programmatically:
-
-```bash
-curl -X POST https://api.rowbase.com/v1/datasets \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Customer List",
-    "project_id": "proj_xxx",
-    "columns": [
-      {"name": "email", "type": "text"},
-      {"name": "signup_date", "type": "date"},
-      {"name": "plan", "type": "text"}
-    ],
-    "data": [
-      {"email": "alice@example.com", "signup_date": "2024-01-15", "plan": "pro"},
-      {"email": "bob@example.com", "signup_date": "2024-01-20", "plan": "free"}
-    ]
-  }'
-```
 
 ## Schema & Data Types
 
@@ -70,7 +37,7 @@ Each dataset has a schema that defines its columns and their types.
 | `number` | Integers and decimals | 42, 3.14, -100 |
 | `boolean` | True/false | true, false, yes, no, 1, 0 |
 | `date` | Dates and timestamps | 2024-01-15, 01/15/2024, Jan 15 2024 |
-| `json` | Nested objects | {"key": "value"} |
+| `json` | Nested objects | `{"key": "value"}` |
 
 ### Type Coercion
 
@@ -88,30 +55,22 @@ Values that can't be coerced are stored as `null`. Check the import preview for 
 
 ## Primary Keys
 
-Designate one or more columns as the primary key to:
+Use the **Primary Key** operation to designate one or more columns as the primary key:
 
-- Enable deduplication based on key columns
-- Support upsert operations via API
-- Track record identity across updates
+- Ensures rows are unique based on key columns
+- Validates that key columns are not null
+- Enables identity tracking across updates
 
-```bash
-# Set primary key via API
-curl -X PATCH https://api.rowbase.com/v1/datasets/ds_xxx \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{"primary_key": ["email"]}'
-```
+## Versioning
 
-## Version History
+Rowbase automatically tracks changes to your datasets:
 
-Every change to a dataset is versioned:
-
-- View the full history of changes
-- Compare versions side-by-side
-- Rollback to any previous version
-- Export data from any point in time
+- Each import or update creates a new version
+- Operations are stored separately from data
+- You can re-run operations on new data versions
 
 <Info>
-Versions are created automatically when you apply operations, import data, or make edits.
+Versions are created automatically when you import data or update datasets via API.
 </Info>
 
 ## Column Operations

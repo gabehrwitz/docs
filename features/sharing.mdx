@@ -5,7 +5,7 @@ description: "Work together on data with your team"
 
 ## Overview
 
-Rowbase makes it easy to collaborate on data with your team. Share datasets, control access, and track who made what changes.
+Rowbase makes it easy to collaborate on data with your team. Share datasets, control access, and work together on transformations.
 
 ## Organization Members
 
@@ -57,7 +57,6 @@ Create a shareable link to a dataset:
 2. Click **Share**
 3. Choose access level:
    - **View only** - Recipients can see data but not edit
-   - **Can comment** - Recipients can add comments
    - **Can edit** - Recipients can modify data
 4. Copy and share the link
 
@@ -78,74 +77,6 @@ Make a dataset publicly accessible:
 
 Public datasets are accessible without authentication but can be made undiscoverable (only accessible with direct link).
 
-## Audit Trail
-
-Every action in Rowbase is logged:
-
-### What's Tracked
-
-- Dataset creation, modification, deletion
-- Operation changes (add, edit, remove, reorder)
-- Data imports and exports
-- Schema changes
-- Access changes
-- Member invites and role changes
-
-### Viewing History
-
-1. Open a dataset or project
-2. Click the **History** tab
-3. View chronological list of changes
-4. Click any entry to see details
-
-### Filtering History
-
-- By user
-- By action type
-- By date range
-- By affected item
-
-## Comments
-
-Add context and discussion to your data:
-
-### Dataset Comments
-
-Comment on entire datasets to:
-- Document the data source
-- Note any known issues
-- Discuss transformation approaches
-
-### Cell Comments
-
-Add comments to specific cells:
-
-1. Right-click a cell
-2. Select **Add Comment**
-3. Type your comment
-4. @mention teammates to notify them
-
-### Comment Resolution
-
-Mark comments as resolved when addressed. Resolved comments are hidden by default but can be viewed in history.
-
-## Notifications
-
-Stay informed about changes to datasets you care about:
-
-### Email Notifications
-
-Configure in **Settings → Notifications**:
-
-- Dataset modified
-- New comments or @mentions
-- Access changes
-- Export completed
-
-### In-App Notifications
-
-The notification bell shows recent activity on datasets and projects you have access to.
-
 ## Best Practices
 
 <AccordionGroup>
@@ -153,7 +84,7 @@ The notification bell shows recent activity on datasets and projects you have ac
     Name datasets and projects clearly so teammates can find what they need.
   </Accordion>
   <Accordion title="Document your transformations" icon="comment">
-    Add comments explaining why operations were applied, especially for complex pipelines.
+    Use descriptive operation names explaining why each transformation was applied.
   </Accordion>
   <Accordion title="Use project-level access" icon="lock">
     Group related datasets in projects and manage access at the project level for easier administration.

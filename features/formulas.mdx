@@ -19,33 +19,33 @@ Formulas let you create computed columns that automatically calculate values bas
 
 ### Referencing Columns
 
-Use column names directly in your formulas:
+Wrap column names in double curly braces:
 
 ```
-first_name + " " + last_name
+{{first_name}} + " " + {{last_name}}
 ```
 
-If a column name contains spaces, wrap it in brackets:
+Column names are case-sensitive and should match exactly:
 
 ```
-[First Name] + " " + [Last Name]
+{{First Name}} + " " + {{Last Name}}
 ```
 
 ### Operators
 
 | Operator | Description | Example |
 |----------|-------------|---------|
-| `+` | Add / Concatenate | `price + tax`, `"Hello " + name` |
-| `-` | Subtract | `total - discount` |
-| `*` | Multiply | `quantity * price` |
-| `/` | Divide | `total / count` |
-| `%` | Modulo | `id % 2` |
-| `=` | Equals | `status = "active"` |
-| `!=` | Not equals | `status != "deleted"` |
-| `>` `<` `>=` `<=` | Comparison | `age >= 18` |
-| `AND` | Logical and | `active AND verified` |
-| `OR` | Logical or | `admin OR moderator` |
-| `NOT` | Logical not | `NOT deleted` |
+| `+` | Add / Concatenate | `{{price}} + {{tax}}` |
+| `-` | Subtract | `{{total}} - {{discount}}` |
+| `*` | Multiply | `{{quantity}} * {{price}}` |
+| `/` | Divide | `{{total}} / {{count}}` |
+| `%` | Modulo | `{{id}} % 2` |
+| `=` | Equals | `{{status}} = "active"` |
+| `!=` | Not equals | `{{status}} != "deleted"` |
+| `>` `<` `>=` `<=` | Comparison | `{{age}} >= 18` |
+| `AND` | Logical and | `{{active}} AND {{verified}}` |
+| `OR` | Logical or | `{{role}} = "admin" OR {{role}} = "moderator"` |
+| `NOT` | Logical not | `NOT({{deleted}})` |
 
 ## Functions Reference
 
@@ -56,7 +56,7 @@ If a column name contains spaces, wrap it in brackets:
     Convert text to uppercase.
     ```
     UPPER("hello") → "HELLO"
-    UPPER(name) → "JOHN DOE"
+    UPPER({{name}}) → "JOHN DOE"
     ```
   </Accordion>
   <Accordion title="LOWER(text)" icon="arrow-down">
@@ -74,7 +74,7 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="CONCAT(a, b, ...)" icon="link">
     Join multiple values together.
     ```
-    CONCAT(first_name, " ", last_name) → "John Doe"
+    CONCAT({{first_name}}, " ", {{last_name}}) → "John Doe"
     ```
   </Accordion>
   <Accordion title="LEFT(text, n)" icon="arrow-left">
@@ -107,6 +107,14 @@ If a column name contains spaces, wrap it in brackets:
     REPLACE("Hello World", "World", "Universe") → "Hello Universe"
     ```
   </Accordion>
+  <Accordion title="FIND(search, text)" icon="magnifying-glass">
+    Find the position of a substring within text. Returns the 1-based index of the first occurrence, or 0 if not found.
+    ```
+    FIND("@", "user@example.com") → 5
+    FIND("world", "hello world") → 7
+    FIND("xyz", "hello") → 0
+    ```
+  </Accordion>
 </AccordionGroup>
 
 ### Math Functions
@@ -115,25 +123,25 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="SUM(a, b, ...)" icon="plus">
     Add multiple values.
     ```
-    SUM(price, tax, shipping) → 125.50
+    SUM({{price}}, {{tax}}, {{shipping}}) → 125.50
     ```
   </Accordion>
   <Accordion title="AVG(a, b, ...)" icon="chart-line">
     Calculate the average.
     ```
-    AVG(q1, q2, q3, q4) → 87.5
+    AVG({{q1}}, {{q2}}, {{q3}}, {{q4}}) → 87.5
     ```
   </Accordion>
   <Accordion title="MIN(a, b, ...)" icon="arrow-down">
     Find the minimum value.
     ```
-    MIN(price_a, price_b, price_c) → 9.99
+    MIN({{price_a}}, {{price_b}}, {{price_c}}) → 9.99
     ```
   </Accordion>
   <Accordion title="MAX(a, b, ...)" icon="arrow-up">
     Find the maximum value.
     ```
-    MAX(score_1, score_2, score_3) → 98
+    MAX({{score_1}}, {{score_2}}, {{score_3}}) → 98
     ```
   </Accordion>
   <Accordion title="ROUND(number, decimals)" icon="circle">
@@ -168,13 +176,13 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="IF(condition, then, else)" icon="code-branch">
     Conditional logic.
     ```
-    IF(score >= 90, "A", IF(score >= 80, "B", "C"))
+    IF({{score}} >= 90, "A", IF({{score}} >= 80, "B", "C"))
     ```
   </Accordion>
   <Accordion title="AND(a, b, ...)" icon="circle-check">
     Returns true if all conditions are true.
     ```
-    AND(age >= 18, verified = true) → true/false
+    AND({{age}} >= 18, {{verified}} = true) → true/false
     ```
   </Accordion>
   <Accordion title="OR(a, b, ...)" icon="circle-half-stroke">
@@ -186,19 +194,19 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="NOT(value)" icon="ban">
     Negate a boolean value.
     ```
-    NOT(deleted) → true/false
+    NOT({{deleted}}) → true/false
     ```
   </Accordion>
   <Accordion title="ISBLANK(value)" icon="question">
     Check if a value is null or empty.
     ```
-    ISBLANK(phone) → true/false
+    ISBLANK({{phone}}) → true/false
     ```
   </Accordion>
   <Accordion title="COALESCE(a, b, ...)" icon="layer-group">
     Return the first non-null value.
     ```
-    COALESCE(nickname, first_name, "Unknown") → "John"
+    COALESCE({{nickname}}, {{first_name}}, "Unknown") → "John"
     ```
   </Accordion>
 </AccordionGroup>
@@ -221,19 +229,19 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="YEAR(date)" icon="calendar">
     Extract the year from a date.
     ```
-    YEAR(created_at) → 2024
+    YEAR({{created_at}}) → 2024
     ```
   </Accordion>
   <Accordion title="MONTH(date)" icon="calendar">
     Extract the month (1-12).
     ```
-    MONTH(created_at) → 1
+    MONTH({{created_at}}) → 1
     ```
   </Accordion>
   <Accordion title="DAY(date)" icon="calendar">
     Extract the day of month (1-31).
     ```
-    DAY(created_at) → 15
+    DAY({{created_at}}) → 15
     ```
   </Accordion>
   <Accordion title="DATEDIFF(date1, date2, unit)" icon="calendar-days">
@@ -246,7 +254,7 @@ If a column name contains spaces, wrap it in brackets:
   <Accordion title="DATEADD(date, amount, unit)" icon="calendar-plus">
     Add time to a date.
     ```
-    DATEADD(created_at, 30, "days") → date + 30 days
+    DATEADD({{created_at}}, 30, "days") → date + 30 days
     ```
   </Accordion>
 </AccordionGroup>
@@ -256,35 +264,35 @@ If a column name contains spaces, wrap it in brackets:
 ### Calculate Age
 
 ```
-DATEDIFF(TODAY(), birth_date, "years")
+DATEDIFF(TODAY(), {{birth_date}}, "years")
 ```
 
 ### Full Name with Title
 
 ```
-IF(ISBLANK(title),
-   first_name + " " + last_name,
-   title + " " + first_name + " " + last_name)
+IF(ISBLANK({{title}}),
+   {{first_name}} + " " + {{last_name}},
+   {{title}} + " " + {{first_name}} + " " + {{last_name}})
 ```
 
 ### Email Domain
 
 ```
-RIGHT(email, LEN(email) - FIND("@", email))
+RIGHT({{email}}, LEN({{email}}) - FIND("@", {{email}}))
 ```
 
 ### Order Total with Tax
 
 ```
-ROUND(subtotal * (1 + tax_rate), 2)
+ROUND({{subtotal}} * (1 + {{tax_rate}}), 2)
 ```
 
 ### Status Label
 
 ```
-IF(status = "active", "✅ Active",
-   IF(status = "pending", "⏳ Pending",
-      IF(status = "inactive", "❌ Inactive", "Unknown")))
+IF({{status}} = "active", "Active",
+   IF({{status}} = "pending", "Pending",
+      IF({{status}} = "inactive", "Inactive", "Unknown")))
 ```
 
 ## Error Handling
