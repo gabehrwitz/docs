@@ -1,0 +1,134 @@
+---
+title: 'Create Dataset'
+description: 'Create a new dataset'
+api: 'POST /datasets'
+---
+
+## Endpoint
+
+```
+POST https://api.rowbase.com/v1/datasets
+```
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Dataset name |
+| `project_id` | string | Yes | Project to create dataset in |
+| `columns` | array | No | Column definitions |
+| `data` | array | No | Initial data rows |
+| `primary_key` | array | No | Primary key column names |
+
+## Response
+
+```json
+{
+  "data": {
+    "id": "ds_new123",
+    "name": "New Dataset",
+    "project_id": "proj_xyz",
+    "row_count": 2,
+    "column_count": 3,
+    "columns": [
+      {"name": "email", "type": "text"},
+      {"name": "name", "type": "text"},
+      {"name": "plan", "type": "text"}
+    ],
+    "created_at": "2024-01-21T10:30:00Z",
+    "updated_at": "2024-01-21T10:30:00Z"
+  }
+}
+```
+
+## Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl -X POST "https://api.rowbase.com/v1/datasets" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Customers",
+        "project_id": "proj_xyz",
+        "columns": [
+          {"name": "email", "type": "text"},
+          {"name": "name", "type": "text"},
+          {"name": "plan", "type": "text"}
+        ],
+        "data": [
+          {"email": "alice@example.com", "name": "Alice", "plan": "pro"},
+          {"email": "bob@example.com", "name": "Bob", "plan": "free"}
+        ],
+        "primary_key": ["email"]
+      }'
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+
+    dataset = client.datasets.create(
+        name="Customers",
+        project_id="proj_xyz",
+        columns=[
+            {"name": "email", "type": "text"},
+            {"name": "name", "type": "text"},
+            {"name": "plan", "type": "text"}
+        ],
+        data=[
+            {"email": "alice@example.com", "name": "Alice", "plan": "pro"},
+            {"email": "bob@example.com", "name": "Bob", "plan": "free"}
+        ],
+        primary_key=["email"]
+    )
+
+    print(f"Created: {dataset.id}")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+
+    const dataset = await client.datasets.create({
+      name: 'Customers',
+      projectId: 'proj_xyz',
+      columns: [
+        { name: 'email', type: 'text' },
+        { name: 'name', type: 'text' },
+        { name: 'plan', type: 'text' }
+      ],
+      data: [
+        { email: 'alice@example.com', name: 'Alice', plan: 'pro' },
+        { email: 'bob@example.com', name: 'Bob', plan: 'free' }
+      ],
+      primaryKey: ['email']
+    });
+
+    console.log(`Created: ${dataset.id}`);
+    ```
+  </Tab>
+</Tabs>
+
+## Column Types
+
+| Type | Description |
+|------|-------------|
+| `text` | String values |
+| `number` | Integers and decimals |
+| `boolean` | True/false |
+| `date` | Date and datetime |
+| `json` | JSON objects |
+
+## Errors
+
+| Status | Code | Description |
+|--------|------|-------------|
+| 400 | `validation_error` | Invalid request body |
+| 404 | `not_found` | Project doesn't exist |
+| 403 | `authorization_error` | No access to project |

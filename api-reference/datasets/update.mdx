@@ -1,0 +1,97 @@
+---
+title: 'Update Dataset'
+description: 'Update dataset metadata'
+api: 'PATCH /datasets/{id}'
+---
+
+## Endpoint
+
+```
+PATCH https://api.rowbase.com/v1/datasets/{id}
+```
+
+## Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | string | The dataset ID |
+
+## Request Body
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | string | New dataset name |
+| `primary_key` | array | Update primary key columns |
+
+## Response
+
+```json
+{
+  "data": {
+    "id": "ds_abc123",
+    "name": "Updated Name",
+    "project_id": "proj_xyz",
+    "row_count": 1250,
+    "column_count": 8,
+    "primary_key": ["email"],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-21T14:22:00Z"
+  }
+}
+```
+
+## Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl -X PATCH "https://api.rowbase.com/v1/datasets/ds_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Updated Dataset Name"
+      }'
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+
+    dataset = client.datasets.update(
+        "ds_abc123",
+        name="Updated Dataset Name"
+    )
+
+    print(f"Updated: {dataset.name}")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+
+    const dataset = await client.datasets.update('ds_abc123', {
+      name: 'Updated Dataset Name'
+    });
+
+    console.log(`Updated: ${dataset.name}`);
+    ```
+  </Tab>
+</Tabs>
+
+## Adding/Updating Rows
+
+To add or update data rows, use the rows endpoint:
+
+```bash
+# Add rows
+POST /datasets/{id}/rows
+
+# Upsert rows (requires primary key)
+POST /datasets/{id}/upsert
+```
+
+See [Add Rows](/api-reference/datasets/rows) for full documentation.

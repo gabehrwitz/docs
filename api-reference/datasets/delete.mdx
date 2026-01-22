@@ -1,0 +1,63 @@
+---
+title: 'Delete Dataset'
+description: 'Delete a dataset'
+api: 'DELETE /datasets/{id}'
+---
+
+## Endpoint
+
+```
+DELETE https://api.rowbase.com/v1/datasets/{id}
+```
+
+## Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | string | The dataset ID |
+
+## Response
+
+Returns `204 No Content` on success.
+
+## Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl -X DELETE "https://api.rowbase.com/v1/datasets/ds_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+    client.datasets.delete("ds_abc123")
+
+    print("Dataset deleted")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+    await client.datasets.delete('ds_abc123');
+
+    console.log('Dataset deleted');
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+Deleting a dataset is permanent and cannot be undone. All data and operations associated with the dataset will be lost.
+</Warning>
+
+## Errors
+
+| Status | Code | Description |
+|--------|------|-------------|
+| 404 | `not_found` | Dataset doesn't exist |
+| 403 | `authorization_error` | No permission to delete |

@@ -1,0 +1,160 @@
+---
+title: 'Authentication'
+description: 'How to authenticate with the Rowbase API'
+---
+
+## API Keys
+
+The Rowbase API uses API keys for authentication. Every request must include your API key in the `Authorization` header.
+
+```bash
+curl https://api.rowbase.com/v1/datasets \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Creating API Keys
+
+1. Log in to [app.rowbase.com](https://app.rowbase.com)
+2. Go to **Settings → API Keys**
+3. Click **Create API Key**
+4. Give your key a descriptive name
+5. Copy the key immediately
+
+<Warning>
+Your API key is only shown once when created. Store it securely. If you lose it, you'll need to create a new one.
+</Warning>
+
+## Key Permissions
+
+API keys inherit permissions from the user who created them. A key can:
+
+- Access all projects and datasets the user can access
+- Perform any action the user is authorized to perform
+- Cannot change organization settings or billing
+
+## Managing API Keys
+
+### View Active Keys
+
+See all active API keys in **Settings → API Keys**. Each key shows:
+
+- Name
+- Created date
+- Last used date
+- Partial key preview (last 4 characters)
+
+### Revoke a Key
+
+To revoke an API key:
+
+1. Go to **Settings → API Keys**
+2. Find the key to revoke
+3. Click the **Revoke** button
+4. Confirm the action
+
+<Warning>
+Revoking a key is immediate and irreversible. Any applications using that key will stop working.
+</Warning>
+
+## Security Best Practices
+
+<AccordionGroup>
+  <Accordion title="Never expose keys in client-side code" icon="eye-slash">
+    API keys should only be used in server-side code. Never include them in JavaScript that runs in the browser, mobile apps, or public repositories.
+  </Accordion>
+  <Accordion title="Use environment variables" icon="terminal">
+    Store API keys in environment variables, not in your codebase.
+
+    ```bash
+    export ROWBASE_API_KEY="your_key_here"
+    ```
+
+    ```python
+    import os
+    api_key = os.environ.get('ROWBASE_API_KEY')
+    ```
+  </Accordion>
+  <Accordion title="Create separate keys for each environment" icon="layer-group">
+    Use different API keys for development, staging, and production. This makes it easy to rotate keys without affecting all environments.
+  </Accordion>
+  <Accordion title="Rotate keys regularly" icon="rotate">
+    Periodically create new API keys and revoke old ones, especially if team members leave or if you suspect a key may have been compromised.
+  </Accordion>
+</AccordionGroup>
+
+## Authentication Errors
+
+### 401 Unauthorized
+
+```json
+{
+  "error": {
+    "code": "authentication_error",
+    "message": "Invalid API key"
+  }
+}
+```
+
+**Common causes:**
+- Missing `Authorization` header
+- Invalid API key
+- Revoked API key
+- Malformed header (missing "Bearer" prefix)
+
+### 403 Forbidden
+
+```json
+{
+  "error": {
+    "code": "authorization_error",
+    "message": "You don't have access to this resource"
+  }
+}
+```
+
+**Common causes:**
+- Trying to access a resource in a different organization
+- Insufficient permissions for the action
+
+## Example: Authenticating in Different Languages
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl https://api.rowbase.com/v1/datasets \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+
+    headers = {
+        'Authorization': f'Bearer {api_key}'
+    }
+
+    response = requests.get(
+        'https://api.rowbase.com/v1/datasets',
+        headers=headers
+    )
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const response = await fetch('https://api.rowbase.com/v1/datasets', {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`
+      }
+    });
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    req, _ := http.NewRequest("GET", "https://api.rowbase.com/v1/datasets", nil)
+    req.Header.Set("Authorization", "Bearer "+apiKey)
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    ```
+  </Tab>
+</Tabs>

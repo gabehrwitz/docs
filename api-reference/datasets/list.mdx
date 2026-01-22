@@ -1,0 +1,87 @@
+---
+title: 'List Datasets'
+description: 'Retrieve a list of datasets in your organization'
+api: 'GET /datasets'
+---
+
+## Endpoint
+
+```
+GET https://api.rowbase.com/v1/datasets
+```
+
+## Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `project_id` | string | Filter by project |
+| `limit` | integer | Results per page (default: 20, max: 100) |
+| `cursor` | string | Pagination cursor |
+
+## Response
+
+```json
+{
+  "data": [
+    {
+      "id": "ds_abc123",
+      "name": "Customer List",
+      "project_id": "proj_xyz",
+      "row_count": 1250,
+      "column_count": 8,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-20T14:22:00Z"
+    },
+    {
+      "id": "ds_def456",
+      "name": "Sales Data",
+      "project_id": "proj_xyz",
+      "row_count": 5420,
+      "column_count": 12,
+      "created_at": "2024-01-10T08:00:00Z",
+      "updated_at": "2024-01-19T16:45:00Z"
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJpZCI6ImRzX2RlZjQ1NiJ9",
+    "has_more": true
+  }
+}
+```
+
+## Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl "https://api.rowbase.com/v1/datasets?project_id=proj_xyz&limit=10" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+    datasets = client.datasets.list(project_id="proj_xyz", limit=10)
+
+    for dataset in datasets:
+        print(f"{dataset.name}: {dataset.row_count} rows")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+    const datasets = await client.datasets.list({
+      projectId: 'proj_xyz',
+      limit: 10
+    });
+
+    datasets.data.forEach(ds => {
+      console.log(`${ds.name}: ${ds.rowCount} rows`);
+    });
+    ```
+  </Tab>
+</Tabs>

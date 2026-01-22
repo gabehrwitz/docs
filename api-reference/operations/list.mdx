@@ -1,0 +1,135 @@
+---
+title: 'List Operations'
+description: 'Retrieve operations for a dataset'
+api: 'GET /datasets/{id}/operations'
+---
+
+## Endpoint
+
+```
+GET https://api.rowbase.com/v1/datasets/{dataset_id}/operations
+```
+
+## Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `dataset_id` | string | The dataset ID |
+
+## Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `status` | string | Filter by status: `pending`, `running`, `completed`, `failed` |
+| `type` | string | Filter by operation type |
+| `limit` | integer | Results per page (default: 20, max: 100) |
+| `cursor` | string | Pagination cursor |
+
+## Response
+
+```json
+{
+  "data": [
+    {
+      "id": "op_abc123",
+      "dataset_id": "ds_xyz789",
+      "type": "enrich",
+      "status": "completed",
+      "config": {
+        "prompt": "Extract company industry from website",
+        "output_column": "industry"
+      },
+      "progress": {
+        "total": 100,
+        "completed": 100,
+        "failed": 0
+      },
+      "created_at": "2024-01-20T10:00:00Z",
+      "completed_at": "2024-01-20T10:05:32Z"
+    },
+    {
+      "id": "op_def456",
+      "dataset_id": "ds_xyz789",
+      "type": "filter",
+      "status": "running",
+      "config": {
+        "condition": "mrr > 100"
+      },
+      "progress": {
+        "total": 500,
+        "completed": 234,
+        "failed": 0
+      },
+      "created_at": "2024-01-20T11:30:00Z",
+      "completed_at": null
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJpZCI6Im9wX2RlZjQ1NiJ9",
+    "has_more": true
+  }
+}
+```
+
+## Example Request
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl "https://api.rowbase.com/v1/datasets/ds_xyz789/operations?status=completed&limit=10" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+    operations = client.operations.list(
+        dataset_id="ds_xyz789",
+        status="completed",
+        limit=10
+    )
+
+    for op in operations:
+        print(f"{op.type}: {op.status}")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+    const operations = await client.operations.list({
+      datasetId: 'ds_xyz789',
+      status: 'completed',
+      limit: 10
+    });
+
+    operations.data.forEach(op => {
+      console.log(`${op.type}: ${op.status}`);
+    });
+    ```
+  </Tab>
+</Tabs>
+
+## Operation Types
+
+| Type | Description |
+|------|-------------|
+| `enrich` | AI-powered data enrichment |
+| `filter` | Filter rows by condition |
+| `transform` | Transform column values |
+| `dedupe` | Remove duplicate rows |
+| `sort` | Sort rows by columns |
+| `aggregate` | Aggregate data |
+
+## Operation Statuses
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Queued for execution |
+| `running` | Currently processing |
+| `completed` | Successfully finished |
+| `failed` | Execution failed |
+| `cancelled` | Manually cancelled |

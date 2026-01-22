@@ -1,0 +1,191 @@
+---
+title: "CSV Import"
+description: "Import data from CSV and other file formats"
+---
+
+## Supported Formats
+
+Rowbase supports importing data from:
+
+| Format | Extensions | Notes |
+|--------|------------|-------|
+| CSV | `.csv` | Comma-separated values |
+| TSV | `.tsv`, `.txt` | Tab-separated values |
+| Excel | `.xlsx`, `.xls` | All sheets or specific sheet |
+
+## Importing CSV Files
+
+### Via Upload
+
+1. Navigate to your project
+2. Click **Upload** or drag and drop your file
+3. Review the import preview
+4. Configure options
+5. Click **Import**
+
+### Import Options
+
+<AccordionGroup>
+  <Accordion title="Header Row" icon="table">
+    **First row is header** (default: enabled)
+
+    When enabled, the first row is used as column names. Disable for data without headers.
+  </Accordion>
+  <Accordion title="Delimiter" icon="grip-lines-vertical">
+    Auto-detected, but can be overridden:
+    - Comma (`,`)
+    - Tab (`\t`)
+    - Semicolon (`;`)
+    - Pipe (`|`)
+    - Custom character
+  </Accordion>
+  <Accordion title="Encoding" icon="code">
+    Usually auto-detected. Options include:
+    - UTF-8 (default)
+    - UTF-16
+    - ISO-8859-1 (Latin-1)
+    - Windows-1252
+  </Accordion>
+  <Accordion title="Quote Character" icon="quote-right">
+    Character used to wrap values containing delimiters:
+    - Double quote (`"`) - default
+    - Single quote (`'`)
+    - None
+  </Accordion>
+</AccordionGroup>
+
+## Type Detection
+
+Rowbase automatically detects column types by analyzing your data:
+
+### Detection Rules
+
+| Detected As | Example Values |
+|-------------|----------------|
+| Number | `42`, `3.14`, `-100`, `1,234.56` |
+| Boolean | `true`, `false`, `yes`, `no`, `1`, `0` |
+| Date | `2024-01-15`, `01/15/2024`, `Jan 15, 2024` |
+| Text | Everything else |
+
+### Overriding Types
+
+If auto-detection isn't correct:
+
+1. Click the column header in the preview
+2. Select the correct type
+3. Review any conversion warnings
+
+<Tip>
+For columns with mixed types (e.g., "N/A" mixed with numbers), choose the primary type. Invalid values become `null`.
+</Tip>
+
+## Handling Large Files
+
+### File Size Limits
+
+- **Web upload**: 100MB
+- **API upload**: 500MB
+- **Chunked upload**: Unlimited
+
+### Tips for Large Files
+
+1. **Use the API** for files over 100MB
+2. **Remove unnecessary columns** before import
+3. **Split into multiple files** if data is logically separable
+4. **Use chunked upload** for very large files
+
+### Chunked Upload (API)
+
+```bash
+# Initialize upload
+curl -X POST https://api.rowbase.com/v1/uploads/init \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"filename": "large-file.csv", "total_size": 500000000}'
+
+# Upload chunks
+curl -X POST https://api.rowbase.com/v1/uploads/UPLOAD_ID/chunk \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Range: bytes 0-9999999/500000000" \
+  --data-binary @chunk1.csv
+
+# Complete upload
+curl -X POST https://api.rowbase.com/v1/uploads/UPLOAD_ID/complete \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Excel Import
+
+### Importing Excel Files
+
+1. Upload your `.xlsx` or `.xls` file
+2. Select which sheet to import (or import all)
+3. Configure the data range (optional)
+4. Review and import
+
+### Excel-Specific Options
+
+- **Sheet selection** - Import one or all sheets
+- **Range selection** - Specify a cell range (e.g., A1:D100)
+- **Skip rows** - Ignore header rows or notes at the top
+- **Skip columns** - Ignore columns on the left
+
+<Info>
+Each sheet becomes a separate dataset when importing multiple sheets.
+</Info>
+
+## Updating Existing Datasets
+
+### Append Mode
+
+Add new rows to an existing dataset:
+
+1. Open the dataset
+2. Click **Import → Append**
+3. Upload your file
+4. Rowbase matches columns by name
+5. New rows are added at the end
+
+### Replace Mode
+
+Replace all data while keeping operations:
+
+1. Open the dataset
+2. Click **Import → Replace**
+3. Upload your file
+4. All existing rows are removed
+5. New data is imported
+6. Operations are re-applied
+
+### Upsert Mode
+
+Update existing rows and add new ones:
+
+1. Requires a **primary key** column
+2. Matching rows are updated
+3. Non-matching rows are added
+4. Rows not in the new file are unchanged
+
+```bash
+# Upsert via API
+curl -X POST https://api.rowbase.com/v1/datasets/ds_xxx/upsert \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: text/csv" \
+  --data-binary @updates.csv
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Garbled characters" icon="triangle-exclamation">
+    Try changing the encoding to UTF-8 or the encoding that matches your source.
+  </Accordion>
+  <Accordion title="Columns merged together" icon="triangle-exclamation">
+    Check that the delimiter is correctly detected. Try specifying it manually.
+  </Accordion>
+  <Accordion title="Dates not recognized" icon="triangle-exclamation">
+    Ensure dates are in a consistent format. ISO format (YYYY-MM-DD) works best.
+  </Accordion>
+  <Accordion title="Numbers shown as text" icon="triangle-exclamation">
+    Remove currency symbols or thousand separators, or change the column type after import.
+  </Accordion>
+</AccordionGroup>

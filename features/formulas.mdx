@@ -1,0 +1,303 @@
+---
+title: "Formulas"
+description: "Create computed columns with spreadsheet-like formulas"
+---
+
+## Overview
+
+Formulas let you create computed columns that automatically calculate values based on other columns. If you've used Excel or Google Sheets, the syntax will feel familiar.
+
+## Creating a Formula Column
+
+1. Click **Add Column** in your dataset
+2. Select **Formula**
+3. Enter your formula expression
+4. Name the new column
+5. Click **Create**
+
+## Syntax Basics
+
+### Referencing Columns
+
+Use column names directly in your formulas:
+
+```
+first_name + " " + last_name
+```
+
+If a column name contains spaces, wrap it in brackets:
+
+```
+[First Name] + " " + [Last Name]
+```
+
+### Operators
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `+` | Add / Concatenate | `price + tax`, `"Hello " + name` |
+| `-` | Subtract | `total - discount` |
+| `*` | Multiply | `quantity * price` |
+| `/` | Divide | `total / count` |
+| `%` | Modulo | `id % 2` |
+| `=` | Equals | `status = "active"` |
+| `!=` | Not equals | `status != "deleted"` |
+| `>` `<` `>=` `<=` | Comparison | `age >= 18` |
+| `AND` | Logical and | `active AND verified` |
+| `OR` | Logical or | `admin OR moderator` |
+| `NOT` | Logical not | `NOT deleted` |
+
+## Functions Reference
+
+### Text Functions
+
+<AccordionGroup>
+  <Accordion title="UPPER(text)" icon="arrow-up">
+    Convert text to uppercase.
+    ```
+    UPPER("hello") → "HELLO"
+    UPPER(name) → "JOHN DOE"
+    ```
+  </Accordion>
+  <Accordion title="LOWER(text)" icon="arrow-down">
+    Convert text to lowercase.
+    ```
+    LOWER("HELLO") → "hello"
+    ```
+  </Accordion>
+  <Accordion title="TRIM(text)" icon="scissors">
+    Remove leading and trailing whitespace.
+    ```
+    TRIM("  hello  ") → "hello"
+    ```
+  </Accordion>
+  <Accordion title="CONCAT(a, b, ...)" icon="link">
+    Join multiple values together.
+    ```
+    CONCAT(first_name, " ", last_name) → "John Doe"
+    ```
+  </Accordion>
+  <Accordion title="LEFT(text, n)" icon="arrow-left">
+    Get the first n characters.
+    ```
+    LEFT("Hello World", 5) → "Hello"
+    ```
+  </Accordion>
+  <Accordion title="RIGHT(text, n)" icon="arrow-right">
+    Get the last n characters.
+    ```
+    RIGHT("Hello World", 5) → "World"
+    ```
+  </Accordion>
+  <Accordion title="MID(text, start, length)" icon="arrows-left-right">
+    Extract a substring.
+    ```
+    MID("Hello World", 7, 5) → "World"
+    ```
+  </Accordion>
+  <Accordion title="LEN(text)" icon="ruler">
+    Get the length of text.
+    ```
+    LEN("Hello") → 5
+    ```
+  </Accordion>
+  <Accordion title="REPLACE(text, old, new)" icon="repeat">
+    Replace occurrences of a string.
+    ```
+    REPLACE("Hello World", "World", "Universe") → "Hello Universe"
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Math Functions
+
+<AccordionGroup>
+  <Accordion title="SUM(a, b, ...)" icon="plus">
+    Add multiple values.
+    ```
+    SUM(price, tax, shipping) → 125.50
+    ```
+  </Accordion>
+  <Accordion title="AVG(a, b, ...)" icon="chart-line">
+    Calculate the average.
+    ```
+    AVG(q1, q2, q3, q4) → 87.5
+    ```
+  </Accordion>
+  <Accordion title="MIN(a, b, ...)" icon="arrow-down">
+    Find the minimum value.
+    ```
+    MIN(price_a, price_b, price_c) → 9.99
+    ```
+  </Accordion>
+  <Accordion title="MAX(a, b, ...)" icon="arrow-up">
+    Find the maximum value.
+    ```
+    MAX(score_1, score_2, score_3) → 98
+    ```
+  </Accordion>
+  <Accordion title="ROUND(number, decimals)" icon="circle">
+    Round to specified decimal places.
+    ```
+    ROUND(3.14159, 2) → 3.14
+    ```
+  </Accordion>
+  <Accordion title="FLOOR(number)" icon="arrow-down">
+    Round down to nearest integer.
+    ```
+    FLOOR(3.7) → 3
+    ```
+  </Accordion>
+  <Accordion title="CEIL(number)" icon="arrow-up">
+    Round up to nearest integer.
+    ```
+    CEIL(3.2) → 4
+    ```
+  </Accordion>
+  <Accordion title="ABS(number)" icon="bars">
+    Get absolute value.
+    ```
+    ABS(-42) → 42
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Logic Functions
+
+<AccordionGroup>
+  <Accordion title="IF(condition, then, else)" icon="code-branch">
+    Conditional logic.
+    ```
+    IF(score >= 90, "A", IF(score >= 80, "B", "C"))
+    ```
+  </Accordion>
+  <Accordion title="AND(a, b, ...)" icon="circle-check">
+    Returns true if all conditions are true.
+    ```
+    AND(age >= 18, verified = true) → true/false
+    ```
+  </Accordion>
+  <Accordion title="OR(a, b, ...)" icon="circle-half-stroke">
+    Returns true if any condition is true.
+    ```
+    OR(role = "admin", role = "moderator") → true/false
+    ```
+  </Accordion>
+  <Accordion title="NOT(value)" icon="ban">
+    Negate a boolean value.
+    ```
+    NOT(deleted) → true/false
+    ```
+  </Accordion>
+  <Accordion title="ISBLANK(value)" icon="question">
+    Check if a value is null or empty.
+    ```
+    ISBLANK(phone) → true/false
+    ```
+  </Accordion>
+  <Accordion title="COALESCE(a, b, ...)" icon="layer-group">
+    Return the first non-null value.
+    ```
+    COALESCE(nickname, first_name, "Unknown") → "John"
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Date Functions
+
+<AccordionGroup>
+  <Accordion title="NOW()" icon="clock">
+    Current date and time.
+    ```
+    NOW() → "2024-01-15T10:30:00Z"
+    ```
+  </Accordion>
+  <Accordion title="TODAY()" icon="calendar">
+    Current date (no time).
+    ```
+    TODAY() → "2024-01-15"
+    ```
+  </Accordion>
+  <Accordion title="YEAR(date)" icon="calendar">
+    Extract the year from a date.
+    ```
+    YEAR(created_at) → 2024
+    ```
+  </Accordion>
+  <Accordion title="MONTH(date)" icon="calendar">
+    Extract the month (1-12).
+    ```
+    MONTH(created_at) → 1
+    ```
+  </Accordion>
+  <Accordion title="DAY(date)" icon="calendar">
+    Extract the day of month (1-31).
+    ```
+    DAY(created_at) → 15
+    ```
+  </Accordion>
+  <Accordion title="DATEDIFF(date1, date2, unit)" icon="calendar-days">
+    Calculate difference between dates.
+    ```
+    DATEDIFF(end_date, start_date, "days") → 30
+    ```
+    Units: "years", "months", "days", "hours", "minutes"
+  </Accordion>
+  <Accordion title="DATEADD(date, amount, unit)" icon="calendar-plus">
+    Add time to a date.
+    ```
+    DATEADD(created_at, 30, "days") → date + 30 days
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+### Calculate Age
+
+```
+DATEDIFF(TODAY(), birth_date, "years")
+```
+
+### Full Name with Title
+
+```
+IF(ISBLANK(title),
+   first_name + " " + last_name,
+   title + " " + first_name + " " + last_name)
+```
+
+### Email Domain
+
+```
+RIGHT(email, LEN(email) - FIND("@", email))
+```
+
+### Order Total with Tax
+
+```
+ROUND(subtotal * (1 + tax_rate), 2)
+```
+
+### Status Label
+
+```
+IF(status = "active", "✅ Active",
+   IF(status = "pending", "⏳ Pending",
+      IF(status = "inactive", "❌ Inactive", "Unknown")))
+```
+
+## Error Handling
+
+Formulas handle errors gracefully:
+
+| Situation | Result |
+|-----------|--------|
+| Null value in calculation | Usually null (unless using COALESCE) |
+| Division by zero | null |
+| Invalid function arguments | null with warning |
+| Type mismatch | Attempted coercion, null if fails |
+
+<Tip>
+Use `COALESCE()` to provide default values when dealing with potentially null columns.
+</Tip>

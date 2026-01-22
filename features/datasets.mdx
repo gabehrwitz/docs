@@ -1,0 +1,185 @@
+---
+title: "Datasets"
+description: "Create, manage, and organize your data with Rowbase datasets"
+---
+
+## Overview
+
+Datasets are the foundation of Rowbase. They store your structured data in a tabular format with automatic type detection, versioning, and schema validation.
+
+## Creating Datasets
+
+### From File Upload
+
+The most common way to create a dataset is by uploading a file:
+
+1. Navigate to your project
+2. Click **Upload** or drag and drop a file
+3. Supported formats: CSV, TSV, Excel (.xlsx, .xls)
+4. Rowbase automatically detects:
+   - Column headers
+   - Data types
+   - Date formats
+   - Number formats
+
+<Tip>
+For large files (100MB+), consider using the API for more control over the import process.
+</Tip>
+
+### From Paste
+
+Quickly import data by copying from any spreadsheet:
+
+1. Click **Paste** in your project
+2. Copy cells from Excel, Google Sheets, or any spreadsheet application
+3. Paste into the Rowbase input
+4. Review the preview and confirm
+
+### Via API
+
+Create datasets programmatically:
+
+```bash
+curl -X POST https://api.rowbase.com/v1/datasets \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Customer List",
+    "project_id": "proj_xxx",
+    "columns": [
+      {"name": "email", "type": "text"},
+      {"name": "signup_date", "type": "date"},
+      {"name": "plan", "type": "text"}
+    ],
+    "data": [
+      {"email": "alice@example.com", "signup_date": "2024-01-15", "plan": "pro"},
+      {"email": "bob@example.com", "signup_date": "2024-01-20", "plan": "free"}
+    ]
+  }'
+```
+
+## Schema & Data Types
+
+Each dataset has a schema that defines its columns and their types.
+
+### Supported Types
+
+| Type | Description | Auto-Detection Examples |
+|------|-------------|-------------------------|
+| `text` | String values | "Hello", "user@email.com" |
+| `number` | Integers and decimals | 42, 3.14, -100 |
+| `boolean` | True/false | true, false, yes, no, 1, 0 |
+| `date` | Dates and timestamps | 2024-01-15, 01/15/2024, Jan 15 2024 |
+| `json` | Nested objects | {"key": "value"} |
+
+### Type Coercion
+
+Rowbase attempts to coerce values to match column types:
+
+```
+"123" in a number column → 123
+"true" in a boolean column → true
+"2024-01-15" in a date column → 2024-01-15T00:00:00Z
+```
+
+<Warning>
+Values that can't be coerced are stored as `null`. Check the import preview for any conversion issues.
+</Warning>
+
+## Primary Keys
+
+Designate one or more columns as the primary key to:
+
+- Enable deduplication based on key columns
+- Support upsert operations via API
+- Track record identity across updates
+
+```bash
+# Set primary key via API
+curl -X PATCH https://api.rowbase.com/v1/datasets/ds_xxx \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"primary_key": ["email"]}'
+```
+
+## Version History
+
+Every change to a dataset is versioned:
+
+- View the full history of changes
+- Compare versions side-by-side
+- Rollback to any previous version
+- Export data from any point in time
+
+<Info>
+Versions are created automatically when you apply operations, import data, or make edits.
+</Info>
+
+## Column Operations
+
+### Rename Columns
+
+Click any column header to rename it. The new name is applied across all operations and formulas.
+
+### Change Column Type
+
+1. Click the column header
+2. Select **Change Type**
+3. Choose the new type
+4. Review any coercion warnings
+5. Confirm the change
+
+### Hide/Show Columns
+
+Hide columns to simplify your view without deleting them:
+
+- Hidden columns are still available in formulas and API responses
+- Toggle visibility from the column menu or view settings
+
+### Reorder Columns
+
+Drag column headers to reorder them, or use the column settings panel for bulk reordering.
+
+## Filtering & Search
+
+### Quick Filter
+
+Click the filter icon on any column to:
+
+- Filter by exact value
+- Filter by condition (contains, starts with, etc.)
+- Filter by multiple values
+
+### Global Search
+
+Use the search bar to find rows containing specific text across all columns.
+
+### Advanced Filters
+
+Create complex filter conditions with AND/OR logic:
+
+```
+(status = "active" AND created_at > "2024-01-01")
+OR
+(status = "pending" AND priority = "high")
+```
+
+## Exporting Data
+
+Export your dataset in multiple formats:
+
+<CardGroup cols="3">
+  <Card title="CSV" icon="file-csv">
+    Standard comma-separated values
+  </Card>
+  <Card title="Excel" icon="file-excel">
+    .xlsx format with formatting
+  </Card>
+  <Card title="JSON" icon="brackets-curly">
+    Array of objects
+  </Card>
+</CardGroup>
+
+Export options:
+- **All data** - Export the complete dataset
+- **Filtered data** - Export only rows matching current filters
+- **Selected columns** - Choose specific columns to include

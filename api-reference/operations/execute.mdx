@@ -1,0 +1,184 @@
+---
+title: 'Execute Operation'
+description: 'Run an operation on a dataset'
+api: 'POST /datasets/{id}/operations'
+---
+
+## Endpoint
+
+```
+POST https://api.rowbase.com/v1/datasets/{dataset_id}/operations
+```
+
+## Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `dataset_id` | string | The dataset ID |
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | Operation type |
+| `config` | object | Yes | Operation-specific configuration |
+| `async` | boolean | No | Run asynchronously (default: true) |
+
+## Response
+
+```json
+{
+  "data": {
+    "id": "op_new123",
+    "dataset_id": "ds_xyz789",
+    "type": "enrich",
+    "status": "pending",
+    "config": {
+      "prompt": "Classify customer sentiment based on their feedback",
+      "input_column": "feedback",
+      "output_column": "sentiment"
+    },
+    "progress": {
+      "total": 250,
+      "completed": 0,
+      "failed": 0
+    },
+    "created_at": "2024-01-21T14:00:00Z",
+    "completed_at": null
+  }
+}
+```
+
+## Example: Enrich Operation
+
+<Tabs>
+  <Tab title="cURL">
+    ```bash
+    curl -X POST "https://api.rowbase.com/v1/datasets/ds_xyz789/operations" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "enrich",
+        "config": {
+          "prompt": "Based on the company website, determine their industry",
+          "input_column": "website",
+          "output_column": "industry"
+        }
+      }'
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from rowbase import Rowbase
+
+    client = Rowbase(api_key="YOUR_API_KEY")
+
+    operation = client.operations.execute(
+        dataset_id="ds_xyz789",
+        type="enrich",
+        config={
+            "prompt": "Based on the company website, determine their industry",
+            "input_column": "website",
+            "output_column": "industry"
+        }
+    )
+
+    print(f"Operation started: {operation.id}")
+    print(f"Status: {operation.status}")
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+    const { Rowbase } = require('@rowbase/sdk');
+
+    const client = new Rowbase({ apiKey: 'YOUR_API_KEY' });
+
+    const operation = await client.operations.execute({
+      datasetId: 'ds_xyz789',
+      type: 'enrich',
+      config: {
+        prompt: 'Based on the company website, determine their industry',
+        inputColumn: 'website',
+        outputColumn: 'industry'
+      }
+    });
+
+    console.log(`Operation started: ${operation.id}`);
+    console.log(`Status: ${operation.status}`);
+    ```
+  </Tab>
+</Tabs>
+
+## Example: Filter Operation
+
+```bash
+curl -X POST "https://api.rowbase.com/v1/datasets/ds_xyz789/operations" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "filter",
+    "config": {
+      "condition": "mrr > 100 AND status = \"active\""
+    }
+  }'
+```
+
+## Example: Transform Operation
+
+```bash
+curl -X POST "https://api.rowbase.com/v1/datasets/ds_xyz789/operations" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "transform",
+    "config": {
+      "column": "email",
+      "expression": "LOWER(email)"
+    }
+  }'
+```
+
+## Synchronous Execution
+
+For small datasets, you can run operations synchronously:
+
+```bash
+curl -X POST "https://api.rowbase.com/v1/datasets/ds_xyz789/operations" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "filter",
+    "config": {
+      "condition": "active = true"
+    },
+    "async": false
+  }'
+```
+
+The response will include the final status and affected row count.
+
+## Polling for Completion
+
+For async operations, poll the operation status:
+
+```python
+import time
+
+operation = client.operations.execute(dataset_id="ds_xyz789", ...)
+
+while operation.status in ["pending", "running"]:
+    time.sleep(2)
+    operation = client.operations.get(operation.id)
+    print(f"Progress: {operation.progress.completed}/{operation.progress.total}")
+
+print(f"Final status: {operation.status}")
+```
+
+## Errors
+
+| Status | Code | Description |
+|--------|------|-------------|
+| 400 | `validation_error` | Invalid operation config |
+| 404 | `not_found` | Dataset doesn't exist |
+| 403 | `authorization_error` | No permission to run operations |
+| 429 | `rate_limit_exceeded` | Too many concurrent operations |
